@@ -10,6 +10,9 @@ import './App.css';
 class App extends Component {
   constructor(props){
     super(props);
+    this.max_content_id = 3 
+    // 이 값을 state에 넣지 않는 이유는 UI에 아무 영향도 주지 않기 때문이다.
+    // state에 너무 많은 값이 들어 있으면 다시 렌더링 되면서 쓸데없이 렌더링이 발생한다.
     this.state = {
       mode:'read',
       selected_content_id:2,
@@ -42,7 +45,20 @@ class App extends Component {
         i = i + 1;
       }
     } else if (this.state.mode ==="create"){
-      _article = <CreateContent></CreateContent>
+      _article = <CreateContent onSubmit={function(_title, _desc){
+        // console.log(this.max_content_id)
+        this.max_content_id = this.max_content_id+1;
+        // this.state.contents.push(
+        //   {id:this.max_content_id, title: _title, desc: _desc}
+        // )
+        const _content = this.state.contents.concat({
+          id:this.max_content_id, title: _title, desc: _desc
+        })
+        // 원본데이터를 바꾸지 않는 concat이 성능상 우위에 있다
+        this.setState({
+          contents: _content
+        })
+      }.bind(this)}></CreateContent>
     }
     return (
       <div className="App">
