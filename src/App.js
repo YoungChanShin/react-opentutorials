@@ -66,7 +66,7 @@ class App extends Component {
           title={this.state.subject.title} 
           sub={this.state.subject.sub}
           onChangePage={function(){
-            this.setState({mode:'welcome'});
+            this.setState({mode:'welcome'}); // 이렇게 데이터 타입 자체가 immutable하면 원본 보존을 고려할 필요없이 원본 보존이 안 된다.
           }.bind(this)}
         >
         </Subject>
