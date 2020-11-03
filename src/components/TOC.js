@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class TOC extends Component{
   shouldComponentUpdate(newProps){
-    console.log(newProps.data, this.props.data, newProps.data===this.props.data)
     return newProps.data!==this.props.data // 원본을 보존하는 경우에만 사용할 수 있다.
   }
     render(){

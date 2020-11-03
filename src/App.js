@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TOC from "./components/TOC";
 import ReadContent from "./components/ReadContent"
 import CreateContent from "./components/CreateContent"
+import UpdateContent from "./components/UpdateContent"
 import Subject from "./components/Subject"
 import Control from "./components/Control"
 import './App.css';
@@ -25,25 +26,28 @@ class App extends Component {
       ]
     }
   }
-  render() {
-    console.log('App render');
+  getContent(){
+    var i = 0;
+      while(i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if(data.id === this.state.selected_content_id) {
+          return data
+        }
+        i = i + 1;
+      }
+    return data
+  }
+  getArticle(){
     var _title, _desc,_article = null;
     if(this.state.mode ===  'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     } else if(this.state.mode === 'read'){
-      var i = 0;
-      while(i < this.state.contents.length){
-        var data = this.state.contents[i];
-        if(data.id === this.state.selected_content_id) {
-          _title = data.title;
-          _desc = data.desc;
-          _article = <ReadContent title={_title} desc={_desc}></ReadContent>
-          break;
-        }
-        i = i + 1;
-      }
+      const data = this.getContent()
+      console.log("data", data)
+      _article = <ReadContent title={data.title} desc={data.desc}></ReadContent>
+      
     } else if (this.state.mode ==="create"){
       _article = <CreateContent onSubmit={function(_title, _desc){
         // console.log(this.max_content_id)
@@ -56,10 +60,40 @@ class App extends Component {
         })
         // 원본데이터를 바꾸지 않는 concat이 성능상 우위에 있다
         this.setState({
-          contents: _content
+          contents: _content,
+          mode:"read",
+          selected_content_id : this.max_content_id
         })
       }.bind(this)}></CreateContent>
+    }else if (this.state.mode ==="update"){
+      const _content = this.getContent()
+      _article = <UpdateContent data={_content} onSubmit={function(_id, _title, _desc){
+        console.log(_id, _title, _desc)
+        let i =0
+        const _contents = Array.from(this.state.contents)
+        while(i<_contents.length){
+          if (_contents[i].id === _id){
+            _contents[i] = {
+              id: _id,
+              title : _title,
+              desc : _desc,
+            }
+            break
+          }
+          i+=1
+        }
+        this.setState({
+          contents: _contents,
+          mode: "read",
+        })
+      }.bind(this)}></UpdateContent>
     }
+    
+    return _article
+  }
+  render() {
+    console.log('App render');
+    const _article = this.getArticle()
     return (
       <div className="App">
         <Subject 
