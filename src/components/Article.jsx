@@ -1,5 +1,4 @@
 function Article(props){
-    // const article = props.article[0].id
     const n = props.article.length
     let article_list = []
     
@@ -13,7 +12,6 @@ function Article(props){
         article_list.push(<li key = {props.article[i].id}>{props.article[i].title} : {props.article[i].content}</li>)
         i += 1
     }
-    console.log(article_list)
     return (
         <article>
             <ul>
